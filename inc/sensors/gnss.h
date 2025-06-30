@@ -1,3 +1,6 @@
+#ifndef _GNSS
+#define _GNSS
+
 #include <stdint.h>
 #include "stm32f4xx_hal.h"
 
@@ -15,3 +18,5 @@ typedef struct {
 void GPS_Init(UART_HandleTypeDef *huart);
 void GPS_UART_Callback();
 GPS_Data* GPS_GetData();
+
+#endif
