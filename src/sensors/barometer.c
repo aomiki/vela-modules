@@ -94,7 +94,7 @@ short barometer_power_on()
 	read_dig_variables();
 
 	// datasheet page 25, register ctrl_meas
-	uint8_t ctrl_meas = 0b01001001;
+	uint8_t ctrl_meas = 0b01001011;
 	log_register(HAL_I2C_Mem_Write(&hi2c1, dev_address, 0xF4, I2C_MEMADD_SIZE_8BIT, &ctrl_meas, 1, timeout_default), "ctrl_meas", SYS_STATE_NONE, SYS_AREA_PERIPH_ACC);
 
 	return 0;
