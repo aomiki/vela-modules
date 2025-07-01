@@ -9,6 +9,20 @@
 static const uint32_t timeout_default = 0xFF; // Таймаут, 255 мс
 static char log_file_name[] = "/sys.log";
 
+void set_default_telemetry(Telemetry *tel)
+{
+	tel->sys_state = SYS_STATE_NONE;
+	tel->sys_area = SYS_AREA_NONE;
+	tel->sys_status = 0;
+
+	tel->acc_x = 0;
+	tel->acc_y = 0;
+	tel->acc_z = 0;
+
+	tel->pressure = 0;
+	tel->temp = 0;
+}
+
 void log_register(HAL_StatusTypeDef status, char *reg, SystemState sys_state, SystemArea sys_area)
 {
 	char *message = NULL;
@@ -142,12 +156,44 @@ void log_message(Message* msg)
 		}
 	}
 
-	if(radio_is_enabled() && msg->priority == PRIORITY_HIGH)
+	if(radio_is_enabled() && msg->priority == PRIORITY_HIGH && false)
 	{
 		HAL_UART_Transmit(&RADIO_UART_HANDLE, (uint8_t *)log_text, strlen(log_text), timeout_default);
 	}
 
 	free(log_text);
+}
+
+void log_telemetry(Telemetry *msg)
+{
+	uint32_t curr_ms = HAL_GetTick();
+	uint16_t PAYLOAD_SIZE = 64;
+	uint8_t payload[64] = {0};
+	memcpy(payload, &curr_ms, 4); //4 bytes
+	memcpy(payload + 3, 	&msg->sys_state, 	1);
+	memcpy(payload + 4, 	&msg->sys_area, 	1);
+	memcpy(payload + 5, 	&msg->temp, 		4);
+	memcpy(payload + 9, 	&msg->pressure, 	4);
+	memcpy(payload + 13, 	&msg->acc_x, 		8);
+	memcpy(payload + 21, 	&msg->acc_y, 		8);
+	memcpy(payload + 29, 	&msg->acc_z, 		8);
+	memcpy(payload + 37, 	&msg->sys_status, 	1);
+
+/*
+	if (sd_card_is_enabled())
+	{
+		sd_file file;
+		sd_status sd_stat = sd_card_open_file(&file, log_file_name);
+
+		if (sd_stat == SD_OK)
+		{
+			sd_stat = sd_card_write(&file, log_text);
+			sd_card_close(&file);
+		}
+	}
+*/
+
+	HAL_UART_Transmit(&RADIO_UART_HANDLE, payload, PAYLOAD_SIZE, timeout_default);
 }
 
 void send_status(uint8_t status)
