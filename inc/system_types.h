@@ -1,5 +1,9 @@
+//Shouldn't have dependency on HAL
+
 #ifndef __SYSTEM_TYPES_H
 #define __SYSTEM_TYPES_H
+
+#include "stdint.h"
 
 typedef enum
 {
