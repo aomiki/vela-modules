@@ -153,17 +153,9 @@ void log_message(Message* msg)
 void log_telemetry(Telemetry *msg)
 {
 	uint32_t curr_ms = HAL_GetTick();
-	uint16_t PAYLOAD_SIZE = 64;
-	uint8_t payload[64] = {0};
-	memcpy(payload, &curr_ms, 4); //4 bytes
-	memcpy(payload + 3, 	&msg->sys_state, 	1);
-	memcpy(payload + 4, 	&msg->sys_area, 	1);
-	memcpy(payload + 5, 	&msg->temp, 		4);
-	memcpy(payload + 9, 	&msg->pressure, 	4);
-	memcpy(payload + 13, 	&msg->acc_x, 		8);
-	memcpy(payload + 21, 	&msg->acc_y, 		8);
-	memcpy(payload + 29, 	&msg->acc_z, 		8);
-	memcpy(payload + 37, 	&msg->sys_status, 	1);
+	uint8_t payload[TELEMETRY_BYTES_SIZE] = {0};
+
+	telemetry_to_bytes(payload, curr_ms, msg);
 
 /*
 	if (sd_card_is_enabled())
@@ -179,7 +171,7 @@ void log_telemetry(Telemetry *msg)
 	}
 */
 
-	HAL_UART_Transmit(&RADIO_UART_HANDLE, payload, PAYLOAD_SIZE, timeout_default);
+	HAL_UART_Transmit(&RADIO_UART_HANDLE, payload, TELEMETRY_BYTES_SIZE, timeout_default);
 }
 
 void send_status(uint8_t status)
