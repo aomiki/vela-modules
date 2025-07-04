@@ -5,7 +5,7 @@
 
 #include "system_types.h"
 
-#define TELEMETRY_BYTES_SIZE 39
+#define TELEMETRY_BYTES_SIZE 43
 typedef enum
 {
 	PRIORITY_DEBUG,
@@ -26,6 +26,7 @@ typedef struct {
 	SystemArea sys_area;
 	status_t sys_status;
 	float temp;
+	float altitude;
 	float pressure;
 	double acc_x;
 	double acc_y;

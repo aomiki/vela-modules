@@ -13,13 +13,14 @@ void set_default_telemetry(Telemetry *tel)
 
 	tel->pressure = 0;
 	tel->temp = 0;
+	tel->altitude = 0;
 }
 
 // У телеметрии такое байтовое представление:
 // ┌───────┬───────────┬───────┬──────┬─────────────┬──────────┬────────┬────────┬────────┬───────────────┐
-// │ BYTES │ 0-3       │ 4     │ 5    │ 6-9         │ 10-13    │ 14-21  │ 22-29  │ 30-37  │ 38            │
+// │ BYTES │ 0-3       │ 4     │ 5    │ 6-9         │ 10-13    │ 14-21  │ 22-29  │ 30-37  │ 38            │39-42
 // ├───────┼───────────┼───────┼──────┼─────────────┼──────────┼────────┼────────┼────────┼───────────────┤
-// │ VALUE │ time (ms) │ state │ area │ temperature │ pressure │ acc: x │ acc: y │ acc: z │ system status │
+// │ VALUE │ time (ms) │ state │ area │ temperature │ pressure │ acc: x │ acc: y │ acc: z │ system status │altitude
 // └───────┴───────────┴───────┴──────┴─────────────┴──────────┴────────┴────────┴────────┴───────────────┘
 
 /** 
@@ -39,6 +40,7 @@ void telemetry_to_bytes(uint8_t* byte_arr, uint32_t time_ms, Telemetry* tel)
 	memcpy(byte_arr + 21, 	&tel->acc_y, 		8);
 	memcpy(byte_arr + 29, 	&tel->acc_z, 		8);
 	memcpy(byte_arr + 37, 	&tel->sys_status, 	1);
+	memcpy(byte_arr + 38, 	&tel->altitude, 	4);
 }
 
 /**
@@ -58,4 +60,5 @@ void bytes_to_telemetry(Telemetry* tel, uint32_t* time_ms, uint8_t* byte_arr)
     memcpy(&tel->acc_y,          byte_arr + 21,   8);
     memcpy(&tel->acc_z,          byte_arr + 29,   8);
     memcpy(&tel->sys_status,     byte_arr + 37,   1);
+    memcpy(&tel->altitude,       byte_arr + 38,   4);
 }
