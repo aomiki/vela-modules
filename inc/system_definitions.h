@@ -58,8 +58,8 @@ SystemState get_sys_state();
 #define USB_UART_HANDLE huart1
 
 //______________________________BUZZER
-#define BUZZER_TIM_HANDLE TIM_CHANNEL_3
-#define BUZZER_TIM_DEF htim4
+#define BUZZER_TIM_HANDLE htim4
+#define BUZZER_TIM_CHANNEL TIM_CHANNEL_3
 
 //_____________________________LED
 #define LED1_PORT GPIOB
