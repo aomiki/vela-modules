@@ -174,12 +174,12 @@ void log_telemetry(Telemetry *msg)
 	HAL_UART_Transmit(&RADIO_UART_HANDLE, payload, TELEMETRY_BYTES_SIZE, timeout_default);
 }
 
-void send_status(uint8_t status)
+void send_status(Peripheral status)
 {
-	HAL_GPIO_WritePin(LED1_PORT, LED1_PIN, status & 1);
-	HAL_GPIO_WritePin(LED2_PORT, LED2_PIN, status & (1 << 1));
-	HAL_GPIO_WritePin(LED3_PORT, LED3_PIN, status & (1 << 2));
-	HAL_GPIO_WritePin(LED4_PORT, LED4_PIN, status & (1 << 3));
-	HAL_GPIO_WritePin(LED5_PORT, LED5_PIN, status & (1 << 4));
-	HAL_GPIO_WritePin(LED6_PORT, LED6_PIN, status & (1 << 5));
+	HAL_GPIO_WritePin(LED1_PORT, LED1_PIN, status & PERIPH_SERVO);
+	HAL_GPIO_WritePin(LED2_PORT, LED2_PIN, status & PERIPH_RADIO);
+	HAL_GPIO_WritePin(LED3_PORT, LED3_PIN, status & PERIPH_SD);
+	HAL_GPIO_WritePin(LED4_PORT, LED4_PIN, status & PERIPH_ACC);
+	HAL_GPIO_WritePin(LED5_PORT, LED5_PIN, status & PERIPH_BAROM);
+	HAL_GPIO_WritePin(LED6_PORT, LED6_PIN, status & PERIPH_GPS);
 }

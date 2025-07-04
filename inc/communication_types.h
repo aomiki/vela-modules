@@ -24,7 +24,7 @@ typedef struct {
 typedef struct {
 	SystemState sys_state;
 	SystemArea sys_area;
-	status_t sys_status;
+	Peripheral sys_status;
 	float temp;
 	float altitude;
 	float pressure;

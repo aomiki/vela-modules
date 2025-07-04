@@ -18,6 +18,16 @@ typedef enum
 
 } SystemArea;
 
+typedef enum {
+    PERIPH_BAROM = 1,
+    PERIPH_ACC = 1 << 1,
+    PERIPH_SD = 1 << 2,
+    PERIPH_RADIO = 1 << 3,
+	PERIPH_GPS = 1 << 4,
+	PERIPH_SERVO = 1 << 5,
+	PERIPH_JUMPER = 1 << 6
+} Peripheral;
+
 typedef enum
 {
 	SYS_STATE_NONE = 0,
