@@ -86,11 +86,16 @@ sd_status sd_card_open_file(sd_file* file_handle, char *filepath)
 
 sd_status sd_card_write(sd_file *file_handle, char* str)
 {
+	return sd_card_write_bytes(file_handle, str, strlen(str));
+}
+
+sd_status sd_card_write_bytes(sd_file *file_handle, uint8_t* payload, size_t size)
+{
 	//f_puts((const TCHAR *)str, &file_handle->internal_handle);
 
-	UINT WWC; // Read/Write Word Counter
+	UINT WWC; // number of bytes written
 
-	FRESULT fs_status = f_write(&file_handle->internal_handle, str, strlen(str), &WWC);
+	FRESULT fs_status = f_write(&file_handle->internal_handle, payload, size, &WWC);
 
 	if (fs_status != FR_OK)
 	{

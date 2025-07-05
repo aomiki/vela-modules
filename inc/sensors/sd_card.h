@@ -28,4 +28,6 @@ sd_status sd_card_open_file(sd_file* file_handle, char* filepath);
 
 sd_status sd_card_write(sd_file* file_handle, char* str);
 
+sd_status sd_card_write_bytes(sd_file *file_handle, uint8_t* payload, size_t size);
+
 sd_status sd_card_close(sd_file* file_handle);

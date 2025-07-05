@@ -1,8 +1,7 @@
-#ifndef _GNSS
-#define _GNSS
+#ifndef _GPS
+#define _GPS
 
 #include <stdint.h>
-#include "stm32f4xx_hal.h"
 
 #define GPS_BUFFER_SIZE 128
 
@@ -15,7 +14,7 @@ typedef struct {
     char timestamp[10];
 } GPS_Data;
 
-void GPS_Init(UART_HandleTypeDef *huart);
+void GPS_Init();
 void GPS_UART_Callback();
 GPS_Data* GPS_GetData();
 

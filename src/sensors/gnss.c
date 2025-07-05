@@ -1,16 +1,17 @@
-#include "gnss.h"
+#include "gps.h"
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
+#include "system_definitions.h"
+//#include "stm32f4xx_hal.h"
 
-static UART_HandleTypeDef *gps_huart;
 static uint8_t gps_rx_buffer[GPS_BUFFER_SIZE];
 static uint16_t gps_index = 0;
 static GPS_Data current_gps_data = {0};
+static uint32_t INIT_TIMEOUT = 90000;
 
-void GPS_Init(UART_HandleTypeDef *huart) {
-    gps_huart = huart;
-    HAL_UART_Receive_IT(gps_huart, &gps_rx_buffer[gps_index], 1);
+void GPS_Init() {
+    HAL_UART_Receive(&GPS_UART_HANDLE, &gps_rx_buffer[gps_index], 1, INIT_TIMEOUT);
 }
 
 void GPS_UART_Callback() {
@@ -19,12 +20,12 @@ void GPS_UART_Callback() {
     // Проверка конца строки
     if (rx_char == '\n' || gps_index >= GPS_BUFFER_SIZE - 1) {
         gps_rx_buffer[gps_index] = '\0'; // Null-terminate
-        
+
         // Парсим только GGA строки
         if (strstr((char*)gps_rx_buffer, "$GPGGA")) {
             char *token = strtok((char*)gps_rx_buffer, ",");
             uint8_t field = 0;
-            
+
             while (token != NULL) {
                 switch (field++) {
                     case 1:  // Время UTC
@@ -59,7 +60,7 @@ void GPS_UART_Callback() {
     } else {
         gps_index++;
     }
-    HAL_UART_Receive_IT(gps_huart, &gps_rx_buffer[gps_index], 1);
+    HAL_UART_Receive_IT(&GPS_UART_HANDLE, &gps_rx_buffer[gps_index], 1);
 }
 
 GPS_Data* GPS_GetData() {

@@ -20,4 +20,4 @@ void log_message(Message* msg);
 /// @param reg Название регистра
 void log_telemetry(Telemetry* msg);
 
-void send_status(uint8_t status);
+void send_status(Peripheral status);

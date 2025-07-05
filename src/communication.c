@@ -8,6 +8,7 @@
 
 static const uint32_t timeout_default = 0xFF; // Таймаут, 255 мс
 static char log_file_name[] = "/sys.log";
+static char telemetry_file_name[] = "/tel.bin";
 
 void log_register(HAL_StatusTypeDef status, char *reg, SystemState sys_state, SystemArea sys_area)
 {
@@ -142,11 +143,6 @@ void log_message(Message* msg)
 		}
 	}
 
-	if(radio_is_enabled() && msg->priority == PRIORITY_HIGH && false)
-	{
-		HAL_UART_Transmit(&RADIO_UART_HANDLE, (uint8_t *)log_text, strlen(log_text), timeout_default);
-	}
-
 	free(log_text);
 }
 
@@ -157,21 +153,19 @@ void log_telemetry(Telemetry *msg)
 
 	telemetry_to_bytes(payload, curr_ms, msg);
 
-/*
+	HAL_UART_Transmit(&RADIO_UART_HANDLE, payload, TELEMETRY_BYTES_SIZE, timeout_default);
+
 	if (sd_card_is_enabled())
 	{
 		sd_file file;
-		sd_status sd_stat = sd_card_open_file(&file, log_file_name);
+		sd_status sd_stat = sd_card_open_file(&file, telemetry_file_name);
 
 		if (sd_stat == SD_OK)
 		{
-			sd_stat = sd_card_write(&file, log_text);
+			sd_stat = sd_card_write_bytes(&file, payload, TELEMETRY_BYTES_SIZE);
 			sd_card_close(&file);
 		}
 	}
-*/
-
-	HAL_UART_Transmit(&RADIO_UART_HANDLE, payload, TELEMETRY_BYTES_SIZE, timeout_default);
 }
 
 void send_status(Peripheral status)

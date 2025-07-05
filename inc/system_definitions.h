@@ -54,11 +54,8 @@ SystemState get_sys_state();
 #define RADIO_UART_HANDLE huart1
 
 //______________________________GPS
-GPS_Init(UART_HandleTypeDef *huart) - просто передать UART_HandleTypeDef, принимает данные в фоновом режиме
 
-//______________________________USB UART
-
-#define USB_UART_HANDLE huart1
+#define GPS_UART_HANDLE huart2
 
 //_____________________________LED
 #define LED1_PORT GPIOB
