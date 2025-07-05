@@ -5,7 +5,7 @@
 
 #include "system_types.h"
 
-#define TELEMETRY_BYTES_SIZE 43
+#define TELEMETRY_BYTES_SIZE 54
 typedef enum
 {
 	PRIORITY_DEBUG,
@@ -31,6 +31,7 @@ typedef struct {
 	double acc_x;
 	double acc_y;
 	double acc_z;
+	GPS_Data gps;
 } Telemetry;
 
 void set_default_telemetry(Telemetry* tel);

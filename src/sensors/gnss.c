@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "system_definitions.h"
+#include "system_types.h"
 //#include "stm32f4xx_hal.h"
 
 static uint8_t gps_rx_buffer[GPS_BUFFER_SIZE];
@@ -16,7 +17,7 @@ void GPS_Init() {
 
 void GPS_UART_Callback() {
     uint8_t rx_char = gps_rx_buffer[gps_index];
-    
+
     // Проверка конца строки
     if (rx_char == '\n' || gps_index >= GPS_BUFFER_SIZE - 1) {
         gps_rx_buffer[gps_index] = '\0'; // Null-terminate

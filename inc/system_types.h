@@ -5,6 +5,15 @@
 
 #include "stdint.h"
 
+typedef struct {
+    float latitude;
+    float longitude;
+    float altitude;
+    uint8_t fix_status;
+    uint8_t satellites;
+    char timestamp[10];
+} GPS_Data;
+
 typedef enum
 {
 	SYS_AREA_NONE,
