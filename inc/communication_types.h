@@ -6,6 +6,8 @@
 #include "system_types.h"
 
 #define TELEMETRY_BYTES_SIZE 54
+static uint16_t TELEMETRY_ID = 69;
+
 typedef enum
 {
 	PRIORITY_DEBUG,
@@ -37,6 +39,6 @@ typedef struct {
 void set_default_telemetry(Telemetry* tel);
 
 void telemetry_to_bytes(uint8_t* byte_arr, uint32_t time_ms, Telemetry* tel);
-void bytes_to_telemetry(Telemetry* tel, uint32_t* time_ms, uint8_t* byte_arr);
+void bytes_to_telemetry(Telemetry* tel, uint32_t* time_ms, uint16_t* received_id, uint8_t* byte_arr);
 
 #endif
