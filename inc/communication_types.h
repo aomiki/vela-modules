@@ -6,7 +6,7 @@
 #include "system_types.h"
 
 #define TELEMETRY_BYTES_SIZE 54
-static uint16_t TELEMETRY_ID = 69;
+static uint16_t TELEMETRY_ID = 0b0011011001010010; //R6 team code
 
 typedef enum
 {
