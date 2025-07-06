@@ -9,10 +9,18 @@
 static uint8_t gps_rx_buffer[GPS_BUFFER_SIZE];
 static uint16_t gps_index = 0;
 static GPS_Data current_gps_data = {0};
-static uint32_t INIT_TIMEOUT = 90000;
 
-void GPS_Init() {
-    HAL_UART_Receive(&GPS_UART_HANDLE, &gps_rx_buffer[gps_index], 1, INIT_TIMEOUT);
+void set_default_gps_data(GPS_Data* data)
+{
+    data->altitude = 0;
+    data->latitude = 0;
+    data->longitude = 0;
+    data->fix_status = 0;
+    data->satellites = 0;
+}
+
+bool GPS_Init() {
+    return HAL_UART_Receive_IT(&GPS_UART_HANDLE, &gps_rx_buffer[gps_index], 1) == HAL_OK;
 }
 
 void GPS_UART_Callback() {
@@ -61,6 +69,7 @@ void GPS_UART_Callback() {
     } else {
         gps_index++;
     }
+
     HAL_UART_Receive_IT(&GPS_UART_HANDLE, &gps_rx_buffer[gps_index], 1);
 }
 
