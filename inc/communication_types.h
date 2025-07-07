@@ -8,6 +8,9 @@
 #define TELEMETRY_BYTES_SIZE 54
 static uint16_t TELEMETRY_ID = 0b0011011001010010; //R6 team code
 
+#define TELEMETRY_ID_UPPER (TELEMETRY_ID & 0xFF)
+#define TELEMETRY_ID_LOWER ((TELEMETRY_ID >> 8) & 0xFF)
+
 typedef enum
 {
 	PRIORITY_DEBUG,
