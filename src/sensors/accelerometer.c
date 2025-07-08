@@ -29,62 +29,37 @@ short check_acc_identity()
 
 short acc_power_on()
 {
-	uint8_t acc_power_mode = 0b01000100;
-	log_register(HAL_I2C_Mem_Write(&hi2c1, dev_address, 0x10, I2C_MEMADD_SIZE_8BIT, &acc_power_mode, 1, timeout_default), "CTRL1_XL", SYS_STATE_NONE, SYS_AREA_PERIPH_ACC);
-
-	uint8_t gyro_power_mode = 0b01000100;
-	log_register(HAL_I2C_Mem_Write(&hi2c1, dev_address, 0x11, I2C_MEMADD_SIZE_8BIT, &gyro_power_mode, 1, timeout_default), "CTRL2_G", SYS_STATE_NONE, SYS_AREA_PERIPH_ACC);
+	//acc power mode + gyro power mode
+	uint8_t sensor_power_mode[2] = {0b01000100, 0b01000100};
+	log_register(HAL_I2C_Mem_Write(&hi2c1, dev_address, 0x10, I2C_MEMADD_SIZE_8BIT, sensor_power_mode, 2, timeout_default), "CTRL1_XL CTRL2_G", SYS_STATE_NONE, SYS_AREA_PERIPH_ACC);
 
 	return 0;
 }
 
 void read_acceleration_xyz(double* buffer_xyz)
 {
-	uint16_t raw_val[2];
+	uint8_t raw_val[6];
 
-	log_register(HAL_I2C_Mem_Read(&hi2c1, dev_address, 0x28, I2C_MEMADD_SIZE_8BIT, (uint8_t*)raw_val, 1, timeout_default), "OUTX_L_XL", SYS_STATE_NONE, SYS_AREA_PERIPH_ACC);
-	log_register(HAL_I2C_Mem_Read(&hi2c1, dev_address, 0x29, I2C_MEMADD_SIZE_8BIT, (uint8_t*)raw_val+1, 1, timeout_default), "OUTX_H_XL", SYS_STATE_NONE, SYS_AREA_PERIPH_ACC);
+	log_register(HAL_I2C_Mem_Read(&hi2c1, dev_address, 0x28, I2C_MEMADD_SIZE_8BIT, raw_val, 6, timeout_default), "OUT?_?_XL", SYS_STATE_NONE, SYS_AREA_PERIPH_ACC);
 
 	int16_t x_val = raw_val[1] << 8 | raw_val[0];
-	raw_val[0] = raw_val[1] = 0;
-
-	log_register(HAL_I2C_Mem_Read(&hi2c1, dev_address, 0x2A, I2C_MEMADD_SIZE_8BIT, (uint8_t*)raw_val, 1, timeout_default), "OUTY_L_XL", SYS_STATE_NONE, SYS_AREA_PERIPH_ACC);
-	log_register(HAL_I2C_Mem_Read(&hi2c1, dev_address, 0x2B, I2C_MEMADD_SIZE_8BIT, (uint8_t*)raw_val+1, 1, timeout_default), "OUTY_H_XL", SYS_STATE_NONE, SYS_AREA_PERIPH_ACC);
-
-	int16_t y_val = raw_val[1] << 8 | raw_val[0];
-	raw_val[0] = raw_val[1] = 0;
-
-	log_register(HAL_I2C_Mem_Read(&hi2c1, dev_address, 0x2C, I2C_MEMADD_SIZE_8BIT, (uint8_t*)raw_val, 1, timeout_default), "OUTZ_L_XL", SYS_STATE_NONE, SYS_AREA_PERIPH_ACC);
-	log_register(HAL_I2C_Mem_Read(&hi2c1, dev_address, 0x2D, I2C_MEMADD_SIZE_8BIT, (uint8_t*)raw_val+1, 1, timeout_default), "OUTZ_H_XL", SYS_STATE_NONE, SYS_AREA_PERIPH_ACC);
-
-	int16_t z_val = raw_val[1] << 8 | raw_val[0];
+	int16_t y_val = raw_val[3] << 8 | raw_val[2];
+	int16_t z_val = raw_val[5] << 8 | raw_val[4];
 
 	buffer_xyz[0] = ((double)x_val * 0.488/1000)*9.81;
 	buffer_xyz[1] = ((double)y_val * 0.488/1000)*9.81;
 	buffer_xyz[2] = ((double)z_val * 0.488/1000)*9.81;
 }
 
-
 void read_acceleration_angular_xyz(double* buffer_xyz)
 {
-	uint16_t raw_val[2];
+	uint8_t raw_val[6];
 
-	log_register(HAL_I2C_Mem_Read(&hi2c1, dev_address, 0x22, I2C_MEMADD_SIZE_8BIT, (uint8_t*)raw_val, 1, timeout_default), "OUTX_L_G", SYS_STATE_NONE, SYS_AREA_PERIPH_ACC);
-	log_register(HAL_I2C_Mem_Read(&hi2c1, dev_address, 0x23, I2C_MEMADD_SIZE_8BIT, (uint8_t*)raw_val+1, 1, timeout_default), "OUTX_H_G", SYS_STATE_NONE, SYS_AREA_PERIPH_ACC);
+	log_register(HAL_I2C_Mem_Read(&hi2c1, dev_address, 0x22, I2C_MEMADD_SIZE_8BIT, raw_val, 6, timeout_default), "OUT?_?_G", SYS_STATE_NONE, SYS_AREA_PERIPH_ACC);
 
 	int16_t x_val = raw_val[1] << 8 | raw_val[0];
-	raw_val[0] = raw_val[1] = 0;
-
-	log_register(HAL_I2C_Mem_Read(&hi2c1, dev_address, 0x24, I2C_MEMADD_SIZE_8BIT, (uint8_t*)raw_val, 1, timeout_default), "OUTY_L_G", SYS_STATE_NONE, SYS_AREA_PERIPH_ACC);
-	log_register(HAL_I2C_Mem_Read(&hi2c1, dev_address, 0x25, I2C_MEMADD_SIZE_8BIT, (uint8_t*)raw_val+1, 1, timeout_default), "OUTY_H_G", SYS_STATE_NONE, SYS_AREA_PERIPH_ACC);
-
-	int16_t y_val = raw_val[1] << 8 | raw_val[0];
-	raw_val[0] = raw_val[1] = 0;
-
-	log_register(HAL_I2C_Mem_Read(&hi2c1, dev_address, 0x26, I2C_MEMADD_SIZE_8BIT, (uint8_t*)raw_val, 1, timeout_default), "OUTZ_L_G", SYS_STATE_NONE, SYS_AREA_PERIPH_ACC);
-	log_register(HAL_I2C_Mem_Read(&hi2c1, dev_address, 0x27, I2C_MEMADD_SIZE_8BIT, (uint8_t*)raw_val+1, 1, timeout_default), "OUTZ_H_G", SYS_STATE_NONE, SYS_AREA_PERIPH_ACC);
-
-	int16_t z_val = raw_val[1] << 8 | raw_val[0];
+	int16_t y_val = raw_val[3] << 8 | raw_val[2];
+	int16_t z_val = raw_val[5] << 8 | raw_val[4];
 
 	buffer_xyz[0] = ((double)x_val * 0.488/1000)*9.81;
 	buffer_xyz[1] = ((double)y_val * 0.488/1000)*9.81;

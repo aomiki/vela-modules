@@ -31,9 +31,7 @@ uint32_t bmp280_compensate_P_int64(int32_t adc_P);
 uint32_t read_pressure()
 {
 	uint8_t pressure_raw[3];
-	log_register(HAL_I2C_Mem_Read(&hi2c1, dev_address, 0xF7, I2C_MEMADD_SIZE_8BIT, pressure_raw, 1, timeout_default), "press_msb", SYS_STATE_NONE, SYS_AREA_PERIPH_ACC);
-	log_register(HAL_I2C_Mem_Read(&hi2c1, dev_address, 0xF8, I2C_MEMADD_SIZE_8BIT, pressure_raw + 1, 1, timeout_default), "press_lsb", SYS_STATE_NONE, SYS_AREA_PERIPH_ACC);
-	log_register(HAL_I2C_Mem_Read(&hi2c1, dev_address, 0xF9, I2C_MEMADD_SIZE_8BIT, pressure_raw + 2, 1, timeout_default), "press_xlsb", SYS_STATE_NONE, SYS_AREA_PERIPH_ACC);
+	log_register(HAL_I2C_Mem_Read(&hi2c1, dev_address, 0xF7, I2C_MEMADD_SIZE_8BIT, pressure_raw, 3, timeout_default), "press_?sb", SYS_STATE_NONE, SYS_AREA_PERIPH_ACC);
 
 	int32_t pressure_raw_32 = (int32_t)(((uint32_t)pressure_raw[0] << 12) | ((uint32_t)pressure_raw[1] << 4) | ((uint32_t)pressure_raw[2] >> 4));
 	uint32_t actual_pressure = bmp280_compensate_P_int64(pressure_raw_32);
@@ -44,9 +42,7 @@ int32_t read_temp()
 {
 	uint8_t temp_raw[3];
 	temp_raw[0] = temp_raw[1] = temp_raw[2] = 0;
-	log_register(HAL_I2C_Mem_Read(&hi2c1, dev_address, 0xFA, I2C_MEMADD_SIZE_8BIT, temp_raw, 1, timeout_default), "temp_msb", SYS_STATE_NONE, SYS_AREA_PERIPH_ACC);
-	log_register(HAL_I2C_Mem_Read(&hi2c1, dev_address, 0xFB, I2C_MEMADD_SIZE_8BIT, temp_raw + 1, 1, timeout_default), "temp_lsb", SYS_STATE_NONE, SYS_AREA_PERIPH_ACC);
-	log_register(HAL_I2C_Mem_Read(&hi2c1, dev_address, 0xFC, I2C_MEMADD_SIZE_8BIT, temp_raw + 2, 1, timeout_default), "temp_xlsb", SYS_STATE_NONE, SYS_AREA_PERIPH_ACC);
+	log_register(HAL_I2C_Mem_Read(&hi2c1, dev_address, 0xFA, I2C_MEMADD_SIZE_8BIT, temp_raw, 3, timeout_default), "temp_?sb", SYS_STATE_NONE, SYS_AREA_PERIPH_ACC);
 
 	int32_t temp_raw_32 = (int32_t)(((uint32_t)temp_raw[0] << 12) | ((uint32_t)temp_raw[1] << 4) | ((uint32_t)temp_raw[2] >> 4));
 	int32_t actual_temp = bmp280_compensate_T_int32(temp_raw_32);
