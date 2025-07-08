@@ -4,6 +4,8 @@
 #include <math.h>
 #include "system_definitions.h"
 #include "system_types.h"
+#include "communication.h"
+
 //#include "stm32f4xx_hal.h"
 
 static uint8_t gps_rx_buffer[GPS_BUFFER_SIZE];
@@ -20,15 +22,20 @@ void set_default_gps_data(GPS_Data* data)
 }
 
 bool GPS_Init() {
-    return HAL_UART_Receive_IT(&GPS_UART_HANDLE, &gps_rx_buffer[gps_index], 1) == HAL_OK;
+    if(HAL_UART_Receive_IT(&GPS_UART_HANDLE, &gps_rx_buffer[gps_index], 1) == HAL_OK)
+    {
+        return true;
+    }
+    return false;
 }
 
 void GPS_UART_Callback() {
-    uint8_t rx_char = gps_rx_buffer[gps_index];
-
     // Проверка конца строки
-    if (rx_char == '\n' || gps_index >= GPS_BUFFER_SIZE - 1) {
+    if (gps_rx_buffer[gps_index] == '\n' || gps_index >= GPS_BUFFER_SIZE - 1) {
         gps_rx_buffer[gps_index] = '\0'; // Null-terminate
+
+        Message msg = { .text = gps_rx_buffer, .priority = PRIORITY_HIGH, .sys_area = SYS_AREA_NONE, .sys_state = SYS_STATE_NONE };
+        log_message(&msg);
 
         // Парсим только GGA строки
         if (strstr((char*)gps_rx_buffer, "$GPGGA")) {
