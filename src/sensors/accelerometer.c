@@ -30,7 +30,10 @@ short check_acc_identity()
 short acc_power_on()
 {
 	uint8_t acc_power_mode = 0b01000100;
-	log_register(HAL_I2C_Mem_Write(&hi2c1, dev_address, 0x10, I2C_MEMADD_SIZE_8BIT, &acc_power_mode, 1, timeout_default), "ctrl_meas", SYS_STATE_NONE, SYS_AREA_PERIPH_ACC);
+	log_register(HAL_I2C_Mem_Write(&hi2c1, dev_address, 0x10, I2C_MEMADD_SIZE_8BIT, &acc_power_mode, 1, timeout_default), "CTRL1_XL", SYS_STATE_NONE, SYS_AREA_PERIPH_ACC);
+
+	uint8_t gyro_power_mode = 0b01000100;
+	log_register(HAL_I2C_Mem_Write(&hi2c1, dev_address, 0x11, I2C_MEMADD_SIZE_8BIT, &gyro_power_mode, 1, timeout_default), "CTRL2_G", SYS_STATE_NONE, SYS_AREA_PERIPH_ACC);
 
 	return 0;
 }
