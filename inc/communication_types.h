@@ -36,6 +36,9 @@ typedef struct {
 	double acc_x;
 	double acc_y;
 	double acc_z;
+	double acc_angular_x;
+	double acc_angular_y;
+	double acc_angular_z;
 	GPS_Data gps;
 } Telemetry;
 

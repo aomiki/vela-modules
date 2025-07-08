@@ -60,3 +60,30 @@ void read_acceleration_xyz(double* buffer_xyz)
 	buffer_xyz[1] = ((double)y_val * 0.488/1000)*9.81;
 	buffer_xyz[2] = ((double)z_val * 0.488/1000)*9.81;
 }
+
+
+void read_acceleration_angular_xyz(double* buffer_xyz)
+{
+	uint16_t raw_val[2];
+
+	log_register(HAL_I2C_Mem_Read(&hi2c1, dev_address, 0x22, I2C_MEMADD_SIZE_8BIT, (uint8_t*)raw_val, 1, timeout_default), "OUTX_L_G", SYS_STATE_NONE, SYS_AREA_PERIPH_ACC);
+	log_register(HAL_I2C_Mem_Read(&hi2c1, dev_address, 0x23, I2C_MEMADD_SIZE_8BIT, (uint8_t*)raw_val+1, 1, timeout_default), "OUTX_H_G", SYS_STATE_NONE, SYS_AREA_PERIPH_ACC);
+
+	int16_t x_val = raw_val[1] << 8 | raw_val[0];
+	raw_val[0] = raw_val[1] = 0;
+
+	log_register(HAL_I2C_Mem_Read(&hi2c1, dev_address, 0x24, I2C_MEMADD_SIZE_8BIT, (uint8_t*)raw_val, 1, timeout_default), "OUTY_L_G", SYS_STATE_NONE, SYS_AREA_PERIPH_ACC);
+	log_register(HAL_I2C_Mem_Read(&hi2c1, dev_address, 0x25, I2C_MEMADD_SIZE_8BIT, (uint8_t*)raw_val+1, 1, timeout_default), "OUTY_H_G", SYS_STATE_NONE, SYS_AREA_PERIPH_ACC);
+
+	int16_t y_val = raw_val[1] << 8 | raw_val[0];
+	raw_val[0] = raw_val[1] = 0;
+
+	log_register(HAL_I2C_Mem_Read(&hi2c1, dev_address, 0x26, I2C_MEMADD_SIZE_8BIT, (uint8_t*)raw_val, 1, timeout_default), "OUTZ_L_G", SYS_STATE_NONE, SYS_AREA_PERIPH_ACC);
+	log_register(HAL_I2C_Mem_Read(&hi2c1, dev_address, 0x27, I2C_MEMADD_SIZE_8BIT, (uint8_t*)raw_val+1, 1, timeout_default), "OUTZ_H_G", SYS_STATE_NONE, SYS_AREA_PERIPH_ACC);
+
+	int16_t z_val = raw_val[1] << 8 | raw_val[0];
+
+	buffer_xyz[0] = ((double)x_val * 0.488/1000)*9.81;
+	buffer_xyz[1] = ((double)y_val * 0.488/1000)*9.81;
+	buffer_xyz[2] = ((double)z_val * 0.488/1000)*9.81;
+}
