@@ -8,23 +8,18 @@
 static const uint8_t dev_address = 0b11010100; //адрес устройства по линии I2C
 static const uint32_t timeout_default = 0xFF; //Таймаут, 255 мс
 
-short check_acc_identity()
+bool check_acc_identity()
 {
-	uint16_t register_address = 0x0F; //Адрес регистра в котором хранится значение ID
-	uint8_t data; //Массив в котором МЫ будем хранить данные с регистра устройства
-	uint16_t Size_ = 1; //Длина запрашиваемых данных, 1 байт = 1 регистр
-
-	log_register(HAL_I2C_Mem_Read(&hi2c1, dev_address, register_address, I2C_MEMADD_SIZE_8BIT, &data, Size_, timeout_default), "WHO AM I", SYS_STATE_NONE, SYS_AREA_PERIPH_ACC);
-	if (data == 0x69)
-	{
-		//successfuly read register
-		return 1;
-	} else
+	uint8_t acc_id;
+	log_register(HAL_I2C_Mem_Read(&hi2c1, dev_address, 0x0F, I2C_MEMADD_SIZE_8BIT, &acc_id, 1, timeout_default), "WHO AM I", SYS_STATE_NONE, SYS_AREA_PERIPH_ACC);
+	if (acc_id != 0x69)
 	{
 		char buffer [50] = "ACCELEROMETER READ ERROR\n\r";
 		send_message(buffer, PRIORITY_HIGH);
-		return 0;
+		return false;
 	}
+
+	return true;
 }
 
 short acc_power_on()

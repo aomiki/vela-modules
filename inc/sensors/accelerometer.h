@@ -1,7 +1,8 @@
+#include <stdbool.h>
 
 /// @brief Делает тестовый запрос к устройству
 /// @returns Возвращает 1 если ответило правильное устройство, 0 иначе
-short check_acc_identity();
+bool check_acc_identity();
 
 /// @brief Устанавливает режим работы в устройство
 short acc_power_on();

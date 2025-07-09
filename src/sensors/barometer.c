@@ -49,23 +49,13 @@ int32_t read_temp()
 	return actual_temp;
 }
 
-short check_barometer_identity()
+bool check_barometer_identity()
 {
-	uint16_t Register_ID = 0xD0; // Адрес регистра в котором хранится значение ID
-	uint8_t Data[1];			 // Массив в котором МЫ будем хранить данные с регистра устройства
-	uint16_t Size_ = 1;			 // Длина запрашиваемых данных, 1 байт = 1 регистр
+	uint8_t barom_id;
 
-	HAL_I2C_Mem_Read(&hi2c1, dev_address, Register_ID, I2C_MEMADD_SIZE_8BIT, Data, Size_, timeout_default);
-	if (Data[0] == 0x58)
-	{
-		return 1;
-	}
-	else
-	{
-		return 0;
-	}
+	HAL_I2C_Mem_Read(&hi2c1, dev_address, 0xD0, I2C_MEMADD_SIZE_8BIT, &barom_id, 1, timeout_default);
 
-	return 0;
+	return barom_id == 0x58;
 }
 
 void read_dig_variables()
