@@ -28,7 +28,7 @@ void set_default_telemetry(Telemetry *tel)
 
 // У телеметрии такое байтовое представление:
 // ┌───────┬─────┬───────────┬───────┬──────┬─────────────┬──────────┬────────┬────────┬────────┬─────────┬─────────┬─────────┬───────────────┬──────────┬────────────────┬─────────────────┬────────────────┬──────────────────┬──────────────────┐
-// │ BYTES │ 0-1 │ 2-4       │ 5     │ 6    │ 7-10        │ 11-14    │ 15-22  │ 23-30  │ 31-38  │ 39-46   │ 47-54   │ 55-62   │ 63            │ 64-67    │ 68-71          │ 72-75           │ 76-79          │ 80               │ 81               │
+// │ BYTES │ 0-1 │ 2-4       │ 5     │ 6    │ 7-10        │ 11-14    │ 15-18  │ 19-22  │ 23-26  │ 27-30   │ 31-34   │ 35-38   │ 39            │ 40-43    │ 44-47          │ 48-51           │ 52-55          │ 56               │ 57               │
 // ├───────┼─────┼───────────┼───────┼──────┼─────────────┼──────────┼────────┼────────┼────────┼─────────┼─────────┼─────────┼───────────────┼──────────┼────────────────┼─────────────────┼────────────────┼──────────────────┼──────────────────┤
 // │ VALUE │ id  │ time (ms) │ state │ area │ temperature │ pressure │ acc: x │ acc: y │ acc: z │ gyro: x │ gyro: y │ gyro: z │ system status │ altitude │ (gps) altitude │ (gps) longitude │ (gps) latitude │ (gps) fix status │ (gps) satellites │
 // └───────┴─────┴───────────┴───────┴──────┴─────────────┴──────────┴────────┴────────┴────────┴─────────┴─────────┴─────────┴───────────────┴──────────┴────────────────┴─────────────────┴────────────────┴──────────────────┴──────────────────┘
@@ -46,20 +46,20 @@ void telemetry_to_bytes(uint8_t* byte_arr, uint32_t time_ms, Telemetry* tel)
 	memcpy(byte_arr + 6, 	&tel->sys_area, 	1);
 	memcpy(byte_arr + 7, 	&tel->temp, 		4);
 	memcpy(byte_arr + 11, 	&tel->pressure, 	4);
-	memcpy(byte_arr + 15, 	&tel->acc_x, 		8);
-	memcpy(byte_arr + 23, 	&tel->acc_y, 		8);
-	memcpy(byte_arr + 31, 	&tel->acc_z, 		8);
-	memcpy(byte_arr + 39, 	&tel->acc_angular_x,8);
-	memcpy(byte_arr + 47, 	&tel->acc_angular_y,8);
-	memcpy(byte_arr + 55, 	&tel->acc_angular_z,8);
-	memcpy(byte_arr + 63, 	&tel->sys_status, 	1);
-	memcpy(byte_arr + 64, 	&tel->altitude, 	4);
+	memcpy(byte_arr + 15, 	&tel->acc_x, 		4);
+	memcpy(byte_arr + 19, 	&tel->acc_y, 		4);
+	memcpy(byte_arr + 23, 	&tel->acc_z, 		4);
+	memcpy(byte_arr + 27, 	&tel->acc_angular_x,4);
+	memcpy(byte_arr + 31, 	&tel->acc_angular_y,4);
+	memcpy(byte_arr + 35, 	&tel->acc_angular_z,4);
+	memcpy(byte_arr + 39, 	&tel->sys_status, 	1);
+	memcpy(byte_arr + 40, 	&tel->altitude, 	4);
 
-	memcpy(byte_arr + 68, 	&tel->gps.altitude,  4);
-	memcpy(byte_arr + 72, 	&tel->gps.longitude, 4);
-	memcpy(byte_arr + 76, 	&tel->gps.latitude,  4);
-	memcpy(byte_arr + 80, 	&tel->gps.fix_status,  1);
-	memcpy(byte_arr + 81, 	&tel->gps.satellites,  1);
+	memcpy(byte_arr + 44, 	&tel->gps.altitude,  4);
+	memcpy(byte_arr + 48, 	&tel->gps.longitude, 4);
+	memcpy(byte_arr + 52, 	&tel->gps.latitude,  4);
+	memcpy(byte_arr + 56, 	&tel->gps.fix_status,  1);
+	memcpy(byte_arr + 57, 	&tel->gps.satellites,  1);
 }
 
 /**
@@ -76,18 +76,18 @@ void bytes_to_telemetry(Telemetry* tel, uint32_t* time_ms, uint16_t* received_id
     memcpy(&tel->sys_area,		byte_arr + 6,	1);
     memcpy(&tel->temp,			byte_arr + 7,	4);
     memcpy(&tel->pressure,		byte_arr + 11,	4);
-    memcpy(&tel->acc_x,			byte_arr + 15,	8);
-    memcpy(&tel->acc_y,			byte_arr + 23,	8);
-    memcpy(&tel->acc_z,			byte_arr + 31,	8);
-    memcpy(&tel->acc_angular_x,	byte_arr + 39,	8);
-    memcpy(&tel->acc_angular_y,	byte_arr + 47,	8);
-    memcpy(&tel->acc_angular_z,	byte_arr + 55,	8);
-    memcpy(&tel->sys_status,	byte_arr + 63,	1);
-    memcpy(&tel->altitude,		byte_arr + 64,	4);
+    memcpy(&tel->acc_x,			byte_arr + 15,	4);
+    memcpy(&tel->acc_y,			byte_arr + 19,	4);
+    memcpy(&tel->acc_z,			byte_arr + 23,	4);
+    memcpy(&tel->acc_angular_x,	byte_arr + 27,	4);
+    memcpy(&tel->acc_angular_y,	byte_arr + 31,	4);
+    memcpy(&tel->acc_angular_z,	byte_arr + 35,	4);
+    memcpy(&tel->sys_status,	byte_arr + 39,	1);
+    memcpy(&tel->altitude,		byte_arr + 40,	4);
 
-	memcpy(&tel->gps.altitude, 	byte_arr + 68,	4);
-	memcpy(&tel->gps.longitude, byte_arr + 72,	4);
-	memcpy(&tel->gps.latitude, 	byte_arr + 76,	4);
-	memcpy(&tel->gps.fix_status, byte_arr + 80,	1);
-	memcpy(&tel->gps.satellites, byte_arr + 81,	1);
+	memcpy(&tel->gps.altitude, 	byte_arr + 44,	4);
+	memcpy(&tel->gps.longitude, byte_arr + 48,	4);
+	memcpy(&tel->gps.latitude, 	byte_arr + 52,	4);
+	memcpy(&tel->gps.fix_status, byte_arr + 56,	1);
+	memcpy(&tel->gps.satellites, byte_arr + 57,	1);
 }

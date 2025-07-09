@@ -5,7 +5,7 @@
 
 #include "system_types.h"
 
-#define TELEMETRY_BYTES_SIZE 82
+#define TELEMETRY_BYTES_SIZE 58
 static uint16_t TELEMETRY_ID = 0b0011011001010010; //R6 team code
 
 #define TELEMETRY_ID_UPPER (TELEMETRY_ID & 0xFF)
@@ -33,12 +33,12 @@ typedef struct {
 	float temp;
 	float altitude;
 	float pressure;
-	double acc_x;
-	double acc_y;
-	double acc_z;
-	double acc_angular_x;
-	double acc_angular_y;
-	double acc_angular_z;
+	float acc_x;
+	float acc_y;
+	float acc_z;
+	float acc_angular_x;
+	float acc_angular_y;
+	float acc_angular_z;
 	GPS_Data gps;
 } Telemetry;
 

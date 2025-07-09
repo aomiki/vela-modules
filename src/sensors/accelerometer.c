@@ -31,7 +31,7 @@ short acc_power_on()
 	return 0;
 }
 
-void read_acceleration_xyz(double* buffer_xyz)
+void read_acceleration_xyz(float* buffer_xyz)
 {
 	uint8_t raw_val[6];
 
@@ -41,12 +41,12 @@ void read_acceleration_xyz(double* buffer_xyz)
 	int16_t y_val = raw_val[3] << 8 | raw_val[2];
 	int16_t z_val = raw_val[5] << 8 | raw_val[4];
 
-	buffer_xyz[0] = ((double)x_val * 0.488/1000)*9.81;
-	buffer_xyz[1] = ((double)y_val * 0.488/1000)*9.81;
-	buffer_xyz[2] = ((double)z_val * 0.488/1000)*9.81;
+	buffer_xyz[0] = ((float)x_val * 0.488/1000)*9.81;
+	buffer_xyz[1] = ((float)y_val * 0.488/1000)*9.81;
+	buffer_xyz[2] = ((float)z_val * 0.488/1000)*9.81;
 }
 
-void read_acceleration_angular_xyz(double* buffer_xyz)
+void read_acceleration_angular_xyz(float* buffer_xyz)
 {
 	uint8_t raw_val[6];
 
@@ -56,7 +56,7 @@ void read_acceleration_angular_xyz(double* buffer_xyz)
 	int16_t y_val = raw_val[3] << 8 | raw_val[2];
 	int16_t z_val = raw_val[5] << 8 | raw_val[4];
 
-	buffer_xyz[0] = ((double)x_val * 0.488/1000)*9.81;
-	buffer_xyz[1] = ((double)y_val * 0.488/1000)*9.81;
-	buffer_xyz[2] = ((double)z_val * 0.488/1000)*9.81;
+	buffer_xyz[0] = ((float)x_val * 0.488/1000)*9.81;
+	buffer_xyz[1] = ((float)y_val * 0.488/1000)*9.81;
+	buffer_xyz[2] = ((float)z_val * 0.488/1000)*9.81;
 }
