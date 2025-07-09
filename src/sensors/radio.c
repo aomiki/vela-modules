@@ -41,9 +41,21 @@ void radio_init()
 	HAL_Delay(10);
 	*/
 
-	//Write ADDL - low bytes of address of module
-	msg_cmd[1] = 0x05; //register addr
+	//Write REG0
+	msg_cmd[1] = 0x02; //register addr
+	msg_cmd[3] = 0b01100010; //register data. 38400 UART baud rate, default serial parity, air rate 4.8k
+	HAL_UART_Transmit(&RADIO_UART_HANDLE, msg_cmd, 4, uart_timeout_default);
+	HAL_Delay(10);
+
+	//Write REG2 - channel control
+	msg_cmd[1] = 0x04; //register addr
 	msg_cmd[3] = channel; //register data
+	HAL_UART_Transmit(&RADIO_UART_HANDLE, msg_cmd, 4, uart_timeout_default);
+	HAL_Delay(10);
+
+	//Write REG3 - low bytes of address of module
+	msg_cmd[1] = 0x05; //register addr
+	msg_cmd[3] = 0b00000000; //register data
 	HAL_UART_Transmit(&RADIO_UART_HANDLE, msg_cmd, 4, uart_timeout_default);
 	HAL_Delay(10);
 
