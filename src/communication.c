@@ -153,7 +153,10 @@ void log_telemetry(Telemetry *msg)
 
 	telemetry_to_bytes(payload, curr_ms, msg);
 
-	HAL_UART_Transmit(&RADIO_UART_HANDLE, payload, TELEMETRY_BYTES_SIZE, timeout_default);
+	if (radio_is_enabled())
+	{
+		HAL_UART_Transmit(&RADIO_UART_HANDLE, payload, TELEMETRY_BYTES_SIZE, timeout_default);
+	}
 
 	if (sd_card_is_enabled())
 	{
