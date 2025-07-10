@@ -5,8 +5,8 @@
 
 #include "system_types.h"
 
-#define TELEMETRY_BYTES_SIZE 58
-static uint16_t TELEMETRY_ID = 0b0011011001010010; //R6 team code
+#define TELEMETRY_BYTES_SIZE 78
+static uint16_t TELEMETRY_ID = 0b0011100001011010; //Z8 team code
 
 #define TELEMETRY_ID_UPPER (TELEMETRY_ID & 0xFF)
 #define TELEMETRY_ID_LOWER ((TELEMETRY_ID >> 8) & 0xFF)
@@ -27,19 +27,30 @@ typedef struct {
 } Message;
 
 typedef struct {
-	SystemState sys_state;
-	SystemArea sys_area;
-	Peripheral sys_status;
-	float temp;
-	float altitude;
-	float pressure;
+	uint8_t status;
+	uint8_t crc1;
+	uint16_t num_pkg;
+	float mag_x;
+	float mag_y;
+	float mag_z;
+
 	float acc_x;
 	float acc_y;
 	float acc_z;
-	float acc_angular_x;
-	float acc_angular_y;
-	float acc_angular_z;
-	GPS_Data gps;
+
+	float gyro_x;
+	float gyro_y;
+	float gyro_z;
+
+	float adc_c;
+	float adc_c2;
+
+	float pressure;
+	float temp;
+	float humidity;
+	float altitude;
+	float gps_latitude;
+	float gps_longitude;
 } Telemetry;
 
 void set_default_telemetry(Telemetry* tel);
